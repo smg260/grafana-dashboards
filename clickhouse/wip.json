@@ -28,17 +28,14 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
+          "color": {            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
-              },
+                "color": "green",                "value": null              },
               {
                 "color": "blue",
                 "value": 1000
@@ -67,7 +64,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": null,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -175,7 +172,7 @@
         "x": 12,
         "y": 0
       },
-      "id": 3,
+      "id": null,
       "options": {
         "legend": {
           "calcs": [],
@@ -290,7 +287,7 @@
         "x": 12,
         "y": 6
       },
-      "id": 6,
+      "id": null,
       "options": {
         "legend": {
           "calcs": [],
@@ -358,7 +355,7 @@
         "x": 0,
         "y": 12
       },
-      "id": 1,
+      "id": null,
       "options": {
         "calculate": true,
         "calculation": {
@@ -389,7 +386,7 @@
           "color": "rgba(255,0,255,0.7)"
         },
         "filterValues": {
-          "le": 1e-9
+          "le": 1E-9
         },
         "legend": {
           "show": true
@@ -547,7 +544,7 @@
         "x": 0,
         "y": 21
       },
-      "id": 5,
+      "id": null,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -587,7 +584,7 @@
           },
           "pluginVersion": "4.0.8",
           "queryType": "table",
-          "rawSql": "SELECT\n    event_time,\n    query_id,\n    arrayFilter(\n        (x) -> x LIKE 'data.%',\n        tables) as tables,\n    query_duration_ms as duration,\n    memory_usage as memory\nFROM\n    clusterAllReplicas(c1, system.query_log)\nWHERE\n    $__timeFilter(event_time)\n    AND query_kind = 'Select'\n    AND type = 'QueryFinish'\n    and user != 'monitoring-internal'\n    and http_user_agent not like 'ClickHouse-Jdbc%'\n    and not empty(tables)\nORDER BY\n    memory DESC;",
+          "rawSql": "SELECT\n    event_time,\n    query_id,\n    arrayFilter(\n        (x) -> x LIKE 'data.%',\n        tables) as tables,\n    query_duration_ms as duration,\n  memory_usage as memory\nFROM\n    clusterAllReplicas(c1, system.query_log)\nWHERE\n    $__timeFilter(event_time)\n    AND query_kind = 'Select'\n    AND type = 'QueryFinish'\n   and user != 'monitoring-internal'\n    and http_user_agent not like 'ClickHouse-Jdbc%'\n    and not empty(tables)\nORDER BY\n    memory DESC;",
           "refId": "A"
         }
       ],
@@ -609,6 +606,6 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "miral-test",
-  "version": 1,
+  "version": null,
   "weekStart": ""
 }

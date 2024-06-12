@@ -18,9 +18,10 @@
     },
     "editable": true,
     "fiscalYearStartMonth": 0,
-    "graphTooltip": 0,
+    "graphTooltip": 1,
     "id": null,
     "links": [],
+    "liveNow": true,
     "panels": [
       {
         "datasource": {
@@ -120,31 +121,36 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "fixedColor": "#789dd5",
+              "mode": "fixed"
             },
             "custom": {
               "axisBorderShow": false,
               "axisCenteredZero": false,
               "axisColorMode": "text",
+              "axisGridShow": false,
               "axisLabel": "",
               "axisPlacement": "auto",
               "barAlignment": 0,
-              "drawStyle": "bars",
-              "fillOpacity": 100,
-              "gradientMode": "none",
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "opacity",
               "hideFrom": {
                 "legend": false,
                 "tooltip": false,
                 "viz": false
               },
               "insertNulls": false,
-              "lineInterpolation": "linear",
-              "lineWidth": 2,
+              "lineInterpolation": "smooth",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 1,
               "pointSize": 5,
               "scaleDistribution": {
                 "type": "linear"
               },
-              "showPoints": "auto",
+              "showPoints": "never",
               "spanNulls": false,
               "stacking": {
                 "group": "A",
@@ -156,7 +162,132 @@
             },
             "fieldMinMax": false,
             "mappings": [],
-            "min": -1,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "semi-dark-blue",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "B - rows inserted"
+              },
+              "properties": [
+                {
+                  "id": "custom.drawStyle",
+                  "value": "line"
+                },
+                {
+                  "id": "custom.axisPlacement",
+                  "value": "right"
+                },
+                {
+                  "id": "custom.axisColorMode",
+                  "value": "series"
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "#baedb3",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "legend": {
+            "calcs": [
+              "sum"
+            ],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "maxHeight": 600,
+            "mode": "multi",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "{{datasource_id}}"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "meta": {
+              "builderOptions": {
+                "columns": [],
+                "database": "",
+                "limit": 1000,
+                "mode": "list",
+                "queryType": "table",
+                "table": ""
+              }
+            },
+            "pluginVersion": "4.0.8",
+            "queryType": "timeseries",
+            "rawSql": "SELECT\n    $__timeInterval(toStartOfSecond(event_time_microseconds)),\n    sum(ProfileEvent_InsertQuery) as \"number of inserts\"\nfrom clusterAllReplicas(c1, system, metric_log)\nwhere $__timeFilter(event_time)\ngroup by 1",
+            "refId": "A -"
+          },
+          {
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "{{datasource_id}}"
+            },
+            "editorType": "sql",
+            "format": 0,
+            "hide": false,
+            "meta": {
+              "builderOptions": {
+                "columns": [],
+                "database": "",
+                "limit": 1000,
+                "mode": "list",
+                "queryType": "table",
+                "table": ""
+              }
+            },
+            "pluginVersion": "4.0.8",
+            "queryType": "timeseries",
+            "rawSql": "SELECT\n    $__timeInterval(toStartOfSecond(event_time_microseconds)),\n    sum(ProfileEvent_InsertedRows) as \"rows inserted\"\nfrom clusterAllReplicas(c1, system.metric_log)\nwhere $__timeFilter(event_time)\ngroup by 1",
+            "refId": "B -"
+          }
+        ],
+        "title": "S3 Loads and Inserts",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "{{datasource_id}}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
             "thresholds": {
               "mode": "absolute",
               "steps": [
@@ -165,30 +296,32 @@
                   "value": null
                 }
               ]
-            },
-            "unit": "none"
+            }
           },
           "overrides": []
         },
         "gridPos": {
-          "h": 6,
-          "w": 12,
-          "x": 12,
-          "y": 0
+          "h": 3,
+          "w": 6,
+          "x": 0,
+          "y": 12
         },
-        "id": null,
+        "id": 6,
         "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "sum"
+            ],
+            "fields": "",
+            "values": false
           },
-          "tooltip": {
-            "maxHeight": 600,
-            "mode": "single",
-            "sort": "none"
-          }
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
         },
         "pluginVersion": "11.0.0",
         "targets": [
@@ -211,12 +344,12 @@
             },
             "pluginVersion": "4.0.8",
             "queryType": "table",
-            "rawSql": "select toStartOfMinute(event_time), count()\nfrom clusterAllReplicas(c1, system, query_log)\nwhere\nquery_kind = 'Select'\nand http_user_agent not like 'ClickHouse-Jdbc%'\nand type = 'QueryFinish'\nand not empty(arrayFilter(\n                  (x) -> x LIKE 'data.%',\n                  tables)\n              )\nand $__timeFilter(event_time)\ngroup by 1",
+            "rawSql": "select $__timeInterval(query_start_time) time, count()\nfrom clusterAllReplicas(c1, system, query_log)\nwhere $__timeFilter(event_time)\nand query_kind = 'Select'\nand http_user_agent not like 'ClickHouse-Jdbc%'\nand type = 'QueryFinish'\nand not empty(arrayFilter(\n                  (x) -> x LIKE 'data.%',\n                  tables)\n              )\ngroup by time\norder by time",
             "refId": "A"
           }
         ],
-        "title": "Selects / Minute",
-        "type": "timeseries"
+        "title": "Total Selects",
+        "type": "stat"
       },
       {
         "datasource": {
@@ -226,7 +359,83 @@
         "fieldConfig": {
           "defaults": {
             "color": {
-              "mode": "palette-classic"
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 6,
+          "y": 12
+        },
+        "id": 7,
+        "options": {
+          "colorMode": "none",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "sum"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "{{datasource_id}}"
+            },
+            "editorType": "sql",
+            "format": 1,
+            "meta": {
+              "builderOptions": {
+                "columns": [],
+                "database": "",
+                "limit": 1000,
+                "mode": "list",
+                "queryType": "table",
+                "table": ""
+              }
+            },
+            "pluginVersion": "4.0.8",
+            "queryType": "table",
+            "rawSql": "select $__timeInterval(query_start_time) time, count()\nfrom clusterAllReplicas(c1,system.query_log)\nwhere $__timeFilter(event_time)\nand query_kind = 'Insert'\nand http_user_agent not like 'ClickHouse-Jdbc%'\nand type = 'QueryFinish'\nand not empty(arrayFilter(\n                  (x) -> x LIKE 'data.%',\n                  tables)\n              )\ngroup by time\norder by time",
+            "refId": "A"
+          }
+        ],
+        "title": "S3 Loads",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "{{datasource_id}}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "super-light-yellow",
+              "mode": "fixed"
             },
             "custom": {
               "axisBorderShow": false,
@@ -248,7 +457,7 @@
               "lineStyle": {
                 "fill": "solid"
               },
-              "lineWidth": 2,
+              "lineWidth": 1,
               "pointSize": 7,
               "scaleDistribution": {
                 "type": "linear"
@@ -268,16 +477,8 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
+                  "color": "semi-dark-blue",
                   "value": null
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 3000000
-                },
-                {
-                  "color": "orange",
-                  "value": 6000000
                 }
               ]
             },
@@ -289,9 +490,9 @@
           "h": 6,
           "w": 12,
           "x": 12,
-          "y": 6
+          "y": 12
         },
-        "id": null,
+        "id": 8,
         "options": {
           "legend": {
             "calcs": [],
@@ -325,12 +526,163 @@
             },
             "pluginVersion": "4.0.8",
             "queryType": "table",
-            "rawSql": "with q as (SELECT toStartOfMinute(event_time) sec,\n                  sum(rows)\n           FROM clusterAllReplicas(c1, system.part_log)\n           WHERE (event_type = 'NewPart')\n             AND $__timeFilter(event_time)\n             GROUP BY sec\n           ORDER BY sec ASC)\n\nselect * from q",
+            "rawSql": "SELECT\n    $__timeInterval(toStartOfSecond(event_time_microseconds)),\n    sum(ProfileEvent_SelectQuery)\nfrom clusterAllReplicas(c1,system,metric_log)\nwhere $__timeFilter(event_time)\ngroup by 1",
             "refId": "A"
           }
         ],
-        "title": "Rows Inserted / Minute",
+        "title": "Select Queries",
         "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "{{datasource_id}}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 0,
+          "y": 15
+        },
+        "id": 9,
+        "options": {
+          "colorMode": "none",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "sum"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "{{datasource_id}}"
+            },
+            "editorType": "sql",
+            "format": 1,
+            "meta": {
+              "builderOptions": {
+                "columns": [],
+                "database": "",
+                "limit": 1000,
+                "mode": "list",
+                "queryType": "table",
+                "table": ""
+              }
+            },
+            "pluginVersion": "4.0.8",
+            "queryType": "table",
+            "rawSql": "SELECT\n    $__timeInterval(toStartOfMinute(event_time)),\n    ProfileEvent_InsertedRows\nfrom clusterAllReplicas(c1, system, metric_log)\nwhere $__timeFilter(event_time)",
+            "refId": "A"
+          }
+        ],
+        "title": "Rows Inserted",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "{{datasource_id}}"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "dark-red",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "decbytes"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 6,
+          "x": 6,
+          "y": 15
+        },
+        "id": 10,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "sum"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.0.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-clickhouse-datasource",
+              "uid": "{{datasource_id}}"
+            },
+            "editorType": "sql",
+            "format": 1,
+            "meta": {
+              "builderOptions": {
+                "columns": [],
+                "database": "",
+                "limit": 1000,
+                "mode": "list",
+                "queryType": "table",
+                "table": ""
+              }
+            },
+            "pluginVersion": "4.0.8",
+            "queryType": "table",
+            "rawSql": "SELECT\n    $__timeInterval(toStartOfMinute(event_time)),\n    ProfileEvent_InsertedBytes\nfrom clusterAllReplicas(c1, system, metric_log)\nwhere $__timeFilter(event_time)",
+            "refId": "A"
+          }
+        ],
+        "title": "Uncompressed Volume Inserted",
+        "type": "stat"
       },
       {
         "datasource": {
@@ -357,9 +709,9 @@
           "h": 9,
           "w": 24,
           "x": 0,
-          "y": 12
+          "y": 18
         },
-        "id": null,
+        "id": 4,
         "options": {
           "calculate": true,
           "calculation": {
@@ -390,7 +742,7 @@
             "color": "rgba(255,0,255,0.7)"
           },
           "filterValues": {
-            "le": 1E-9
+            "le": 1e-9
           },
           "legend": {
             "show": true
@@ -431,11 +783,11 @@
             },
             "pluginVersion": "4.0.8",
             "queryType": "table",
-            "rawSql": "select event_time, query_duration_ms as duration\nfrom clusterAllReplicas(c1, system, query_log)\nwhere \nquery_kind = 'Select'\nand http_user_agent not like 'ClickHouse-Jdbc%'\nand type = 'QueryFinish'\nand not empty(arrayFilter(\n                  (x) -> x LIKE 'data.%',\n                  tables)\n              )\nand $__timeFilter(event_time)\norder by event_time desc\nlimit 1000\n",
+            "rawSql": "select $__timeInterval(query_start_time), query_duration_ms as duration\nfrom clusterAllReplicas(c1, system, query_log)\nwhere \nquery_kind = 'Select'\nand http_user_agent not like 'ClickHouse-Jdbc%'\nand type = 'QueryFinish'\nand not empty(arrayFilter(\n                  (x) -> x LIKE 'data.%',\n                  tables)\n              )\nand $__timeFilter(event_time)\norder by event_time desc\n",
             "refId": "A"
           }
         ],
-        "title": "Select Latency (Log Scale)",
+        "title": "Select Query Latency (Log Scale)",
         "type": "heatmap"
       },
       {
@@ -488,7 +840,7 @@
                 },
                 {
                   "id": "custom.width",
-                  "value": 79
+                  "value": 76
                 }
               ]
             },
@@ -512,7 +864,7 @@
               "properties": [
                 {
                   "id": "custom.width",
-                  "value": 113
+                  "value": 93
                 }
               ]
             },
@@ -536,7 +888,7 @@
               "properties": [
                 {
                   "id": "custom.width",
-                  "value": 170
+                  "value": 165
                 }
               ]
             }
@@ -546,9 +898,9 @@
           "h": 7,
           "w": 24,
           "x": 0,
-          "y": 21
+          "y": 27
         },
-        "id": null,
+        "id": 5,
         "options": {
           "cellHeight": "sm",
           "footer": {
@@ -563,7 +915,7 @@
           "sortBy": [
             {
               "desc": true,
-              "displayName": "memory"
+              "displayName": "duration"
             }
           ]
         },
@@ -588,7 +940,7 @@
             },
             "pluginVersion": "4.0.8",
             "queryType": "table",
-            "rawSql": "SELECT\n    event_time,\n    query_id,\n    arrayFilter(\n        (x) -> x LIKE 'data.%',\n        tables) as tables,\n    query_duration_ms as duration,\n  memory_usage as memory\nFROM\n    clusterAllReplicas(c1, system.query_log)\nWHERE\n    $__timeFilter(event_time)\n    AND query_kind = 'Select'\n    AND type = 'QueryFinish'\n   and user != 'monitoring-internal'\n    and http_user_agent not like 'ClickHouse-Jdbc%'\n    and not empty(tables)\nORDER BY\n    memory DESC;",
+            "rawSql": "SELECT\n    event_time,\n    query_duration_ms as duration,\n    memory_usage as memory,\n    query_id,\n    arrayFilter(\n        (x) -> x LIKE 'data.%',\n        tables) as tables\nFROM\n    clusterAllReplicas(c1, system.query_log)\nWHERE\n    $__timeFilter(event_time)\n    AND query_kind = 'Select'\n    AND type = 'QueryFinish'\n   and user != 'monitoring-internal'\n    and http_user_agent not like 'ClickHouse-Jdbc%'\n    and not empty(tables)\nORDER BY\n    memory DESC;",
             "refId": "A"
           }
         ],
@@ -596,7 +948,7 @@
         "type": "table"
       }
     ],
-    "refresh": "",
+    "refresh": "30s",
     "schemaVersion": 39,
     "tags": [],
     "templating": {
